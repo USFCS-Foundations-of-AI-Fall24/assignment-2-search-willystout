@@ -14,7 +14,7 @@
 ## Charged can be True or False
 
 from copy import deepcopy
-from search_algorithms import breadth_first_search, depth_first_search
+from search_algorithms import breadth_first_search, depth_first_search, depth_limited_search
 
 class RoverState :
     def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False):
@@ -73,6 +73,29 @@ def move_to_battery(state) :
     return r2
 # add tool functions here
 
+def pick_up_tool(state) :
+    r2 = deepcopy(state)
+    if not state.holding_tool:
+        r2.holding_tool = True
+    r2.prev = state
+    return r2
+
+
+def drop_tool(state) :
+    r2 = deepcopy(state)
+    if state.holding_tool:
+        r2.holding_tool = False
+    r2.prev = state
+    return r2
+
+
+def use_tool(state) :
+    r2 = deepcopy(state)
+    if state.holding_tool and not state.sample_extracted and state.loc == "sample":
+        r2.sample_extracted = True
+    r2.prev = state
+    return r2
+
 
 def pick_up_sample(state) :
     r2 = deepcopy(state)
@@ -95,31 +118,9 @@ def charge(state) :
     r2.prev = state
     return r2
 
-def pick_up_tool(state) :
-    r2 = deepcopy(state)
-    r2.holding_tool = True
-    r2.prev = state
-    return r2
-
-
-def drop_tool(state) :
-    r2 = deepcopy(state)
-    r2.holding_tool = True
-    r2.prev = state
-    return r2
-
-
-def use_tool(state) :
-    r2 = deepcopy(state)
-    r2.holding_tool = True
-    r2.prev = state
-    return r2
-
-
-
-
 action_list = [charge, drop_sample, pick_up_sample,
-               move_to_sample, move_to_battery, move_to_station, holding_tool]
+               move_to_sample, move_to_battery, move_to_station, 
+               use_tool, pick_up_tool, drop_tool]
 
 def battery_goal(state) :
     return state.loc == "battery"
@@ -129,7 +130,7 @@ def goal_state(state) :
     return state.loc == "goal"
 
 def holding_tool(state):
-    return self.holding_tool
+    return state.holding_tool
 
 def mission_complete(state) :
     return (state.loc == "goal" and state.charged == True and 
@@ -139,8 +140,6 @@ if __name__=="__main__" :
     s = RoverState()
     result = breadth_first_search(s, action_list, mission_complete)
     dfs = depth_first_search(s, action_list, mission_complete)
-    print(result)
-    print(dfs)
-
+    dls = depth_limited_search(s, action_list, mission_complete, 100)
 
 

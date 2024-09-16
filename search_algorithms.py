@@ -96,3 +96,4 @@ def depth_limited_search(startState, action_list, goal_test, limit, use_closed_l
                 for s in successors :
                     closed_list[s[0]] = True
             search_queue.extend(successors)
+    print("DLS Count: ", count)
