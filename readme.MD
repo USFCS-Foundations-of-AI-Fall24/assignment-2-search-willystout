@@ -47,22 +47,23 @@ We also have a set of actions. Each action is implemented as a function that can
 This approach allows us a great deal of flexibility to solve a variety of problems and easily add or change 
 our actions without breaking our existing code.
 
-1. **(5 points)**. _Sept 10_ We need an __eq__ function in RoverState to detect repeated states. Implement this. 
+### 1. **(5 points)**. _Sept 10_ We need an __eq__ function in RoverState to detect repeated states. Implement this. 
 Two states are equal if all of their instance variables are equal.
 
-2. **(5 points)** _Sept 11_ Now we need to create a *goal function*. This is a function that will return True if a state is the goal state,
-and False otherwise. I've provided a battery_goal test that returns True if we are at the battery and False otherwise.
+### 2. **(5 points)** _Sept 11_ Now we need to create a *goal function*. 
+This is a function that will return True if a state is the goal state, and False otherwise. I've provided a battery_goal test that returns True if 
+we are at the battery and False otherwise.
 
 Create a mission_complete goal function that returns True if we are at the battery, charged, and the sample is at the station.
 
-3. **(5 points)** _Sept 12_ Run this with the included BFS and DFS implementations. Extend each of these to count the number of states generated. 
+### 3. **(5 points)** _Sept 12_ Run this with the included BFS and DFS implementations. Extend each of these to count the number of states generated. 
 Print this out at the end.
 
-4. **(10 points)** _Sept 13_ Extend the depth_first_search function to implement *depth_limited_search* by providing an optional *limit* parameter. 
+### 4. **(10 points)** _Sept 13_ Extend the depth_first_search function to implement *depth_limited_search* by providing an optional *limit* parameter. 
 When you are generating successors, only go to depth=limit in the search tree. (You are welcome to extend the RoverState class 
 to make this easier if you'd like.) 
 
-5. **(10 points)** _Sept 14_ We found out that the rover cannot extract the sample on its own; it needs a tool. Extend the program as follows: 
+### 5. **(10 points)** _Sept 14_ We found out that the rover cannot extract the sample on its own; it needs a tool. Extend the program as follows: 
 
 Add a holding_tool instance variable to RoverState. Update your constructor and eq methods correctly.
 add the following actions: 
@@ -77,7 +78,7 @@ return a new state with the sample_extracted variable set to True.
 Run each of the four algorithms (breadth_first_search, depth_first_search, depth_limited_search, iterative_deepening_search) 
 on this new problem and count the number of states generated. 
 
-6. **(10 points)** _Sept 15_ An early insight in solving search-based problems was the idea of *problem decomposition*. If a 
+# 6. **(10 points)** _Sept 15_ An early insight in solving search-based problems was the idea of *problem decomposition*. If a 
 problem can be subdivided into into smaller components that can be solved separately, we can deal with scaling more easily.
 
 Modify your search code so that it instead solves three subproblems: moveToSample, removeSample, and returnToCharger.
@@ -85,7 +86,7 @@ You can do this by changing the start state and goal test. How does this change 
 
 Please add a PDF to your repo with the state data for each of the questions above.
 
-**Question 3** 
+# **Question 3** 
 
 For this problem, we will solve a classic path-finding problem using A*. This can be found in routefinder.py
 
@@ -97,20 +98,20 @@ This data is also captured in the MarsMap file.
 
 You will need to:
 
-a) **(5 points)** _Sept 14_ Complete the read_mars_graph() method so that you can create a graph. 
-I've provided a Graph class for you; if you want to modify it, feel free. 
+# a) **(5 points)** _Sept 14_ Complete the read_mars_graph() method so that you can create a graph. 
+# I've provided a Graph class for you; if you want to modify it, feel free. 
 
-b) **(15 points)** _Sept 17_ In search_algorithms.py, complete the a_star function. 
+# b) **(15 points)** _Sept 17_ In search_algorithms.py, complete the a_star function. 
 You will need to implement a straight-line distance heuristic. 
 This should compute SLD(p1) = sqrt((p1.x - p2.x)^2 + (p1.y - p2.y)^2)) where p2=(1,1)
 
 SLD should be a separate function that is provided to a_star, NOT something encoded within the algorithm. 
 You should be able to pass in a different heuristic function, such as h1, which always returns 0, without changing your code.
 
-c) **(5 points)** _Sept 18_ Run both A* and uniform cost search (i.e. using h1: h=0 for all states) 
+# c) **(5 points)** _Sept 18_ Run both A* and uniform cost search (i.e. using h1: h=0 for all states) 
 on the MarsMap and count the number of states generated. Add this to your results.
 
-**Question 4: Constraints.**
+### **Question 4: Constraints.**
 
 For this question, you'll be using the [(OR-Tools)](https://developers.google.com/optimization) toolkit to help out our Mars rover.
 I've provided some sample code for you to use in mapcoloring.py as a starting point that solves
@@ -120,7 +121,7 @@ This provides our first introduction to *knowledge-based programming*. This is a
 where the focus is on representing complex problem knowledge (constraints in this case) and then handing that
 knowledge to an automated solver to find a solution. 
 
-a. **(10 points)** _Sept 19_ Our rover needs to set up nine wireless antennae so that its sensors can collect data and send it back. 
+# a. **(10 points)** _Sept 19_ Our rover needs to set up nine wireless antennae so that its sensors can collect data and send it back. 
 Antennae that are close to each other need to operate on different frequencies so that they don't interfere with each other.
 
 Our rover has three possible frequencies (f1, f2 and f3) that it can assign to an antenna.
@@ -142,7 +143,7 @@ Using the map coloring code as an example, use OR-tools to find an assignment of
 no adjacent antennae share a frequency.
 
 
-**Question 5: Deep Blue vs AlphaZero (10 points)**
+### **Question 5: Deep Blue vs AlphaZero (10 points)**
 _Sept 20_
 
 In the late 90s, Deep Blue shocked the world by becoming the first computer to beat a human grandmaster, Garry Kasparov. 
