@@ -1,5 +1,7 @@
 from queue import PriorityQueue
 import math
+from re import search
+
 import Graph
 import mars_planner
 
@@ -34,36 +36,47 @@ class map_state:
     def is_goal(self):
         return self.location == "1,1"
 
-    def successors(self, state):
-        edges = state.mars_graph.get_edges(state.location)
-        return [(map_state(edge.dest, state.mars_graph, state, state.g + edge.val, 0), edge.val) for edge in edges] # used Autocomplete (I think GitHub coPilot)
+    def successors(self):
+        edges = self.mars_graph.get_edges(self.location)
+        return [(map_state(edge.dest, self.mars_graph, self, self.g + edge.val, 0), edge.val) for edge in
+                edges]  # used autocomplete (I think GitHub coPilot)
 
 
 def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True):
     search_queue = PriorityQueue()
     closed_list = {}
-    search_queue.put((start_state.g, start_state.h))
+    curr_state = None
+    # (f_value, state instance) ... in the minHeap
+    search_queue.put((start_state.f, start_state))
     count = 0
     if use_closed_list:
         closed_list[start_state] = True
-    while search_queue.not_empty:
-        next_state = search_queue.get()
-        successors = next_state[0].successors(next_state)
-        if goal_test(next_state[0]):
+    while search_queue:
+        # unpack cur_cost and next_state for each tuple in the queue
+        cur_cost, curr_state = search_queue.get()
+        successors = curr_state.successors()
+        if goal_test(curr_state):
             print("Goal found")
-            print(next_state)
-            ptr = next_state[0]
+            print(curr_state)
+            ptr = curr_state
             while ptr is not None:
-                ptr = ptr.prev
+                ptr = ptr.prev_state
                 print(ptr)
-            return next_state
+            print("A* count: ", count)
+            return curr_state
         if use_closed_list:
-            successors = [item for item in successors if item[0] not in closed_list]
+            successors = [item for item in successors if item not in closed_list]
             for s in successors:
+                closed_list[s] = True
+            for successor, f_value in successors:
                 count += 1
-                closed_list[s[0]] = True
-        search_queue.put(successors)
-    print("A* count: ", count)
+                new_state = map_state(location=successor.location, # create new state
+                                      mars_graph=curr_state.mars_graph,
+                                      prev_state=curr_state)
+                new_state.g = curr_state.g + 1 # cost so far = curr_state.cost
+                new_state.h = heuristic_fn(successor) # estimated cost to goal
+                new_state.f = new_state.g + new_state.h # total estimated cost
+                search_queue.put((new_state.f, new_state))
 
 
 ## default heuristic - we can use this to implement uniform cost search
@@ -73,7 +86,7 @@ def h1(state):
 
 ## you do this - return the straight-line distance between the state and (1,1)
 def sld(state):
-    return math.sqrt((state.location[0] - 1) ** 2) + math.sqrt((state.location[2] - 1) ** 2)
+    return math.sqrt((int(state.location[0]) - 1) ** 2) + math.sqrt((int(state.location[2]) - 1) ** 2)
 
 
 ## you implement this. Open the file filename, read in each line,
@@ -86,22 +99,24 @@ def read_mars_graph(filename):
     # a_star = start_state, heuristic_fn, goal_test, use_closed_list=True
 
 
-
 def add_edges(graph, filename):
     with open(filename, "r") as f:
         lines = f.read().split("\n")
         for line in lines:
             nodes = line.split(":")
-            edges = nodes[1].split(" ")
-            for edge in edges:
-                if not edge == "":
-                    # instead of the graph class we should use the map_state class
-                    map_state = map_state(nodes[0], graph, None, int(edge[0]), int(edge[2]))
-                    newEdge = Graph.Edge(nodes[0], int(edge[0]), int(edge[2]))
-                    graph.add_edge(newEdge)
+            src = nodes[0]
+            graph.add_node(src)
+            dests = nodes[1].split(" ")[1:]
+            for dest in dests:
+                edge = Graph.Edge(src, dest, 0)
+                graph.add_edge(edge)
+
+
+def check_goal(state):
+    return state.is_goal()
 
 
 if __name__ == "__main__":
-    read_mars_graph("marsmap")
-
-    
+    graph = read_mars_graph("marsmap")
+    mapstate = map_state("8,8", graph, None, 0, 0)
+    a_start_search = a_star(mapstate, sld, check_goal, True)

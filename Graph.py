@@ -26,19 +26,13 @@ class Graph :
         self.g = {}
 
     def add_node(self, index):
-        if not len(str(index)) == 1:
-            if index not in self.g:
-                self.g[index] = []
+        self.g[index] = []
     
     def get_node(self, index):
         if index in self.g:
             return self.g[index]
 
     def add_edge(self, e):
-        if e.src not in self.g:
-            self.add_node(e.src)
-        if e.dest not in self.g:
-            self.add_node(e.dest)
         self.g[e.src].append(e)
 
     def get_edge(self, src, dest):

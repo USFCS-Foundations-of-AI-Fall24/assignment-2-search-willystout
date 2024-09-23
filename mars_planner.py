@@ -156,13 +156,16 @@ action_list = [
 
 def battery_goal(state):
     return state.loc == "battery"
-
-
 ## add your goals here.
 
 
 def goal_state(state):
-    return state.loc == "goal"
+    return (
+        state.loc == "battery"
+        and state.sample_extracted == True
+        and state.holding_sample == False
+        and state.charged == True
+    )
 
 
 def holding_tool(state):
@@ -180,6 +183,6 @@ def mission_complete(state):
 
 if __name__ == "__main__":
     s = RoverState()
-    result = breadth_first_search(s, action_list, mission_complete)
+    bfs = breadth_first_search(s, action_list, mission_complete)
     dfs = depth_first_search(s, action_list, mission_complete)
     dls = depth_limited_search(s, action_list, mission_complete, 100)
