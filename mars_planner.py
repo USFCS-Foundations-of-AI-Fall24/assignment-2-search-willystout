@@ -181,7 +181,7 @@ def mission_complete(state):
     )
 
 
-if __name__ == "__main__":
+def test_mars_planner():
     s = RoverState()
     bfs = breadth_first_search(s, action_list, mission_complete)
     dfs = depth_first_search(s, action_list, mission_complete)

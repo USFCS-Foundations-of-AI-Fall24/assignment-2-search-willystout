@@ -1,13 +1,12 @@
-# Description: This file contains the solution to the Mars Rover problem.
-# The solution is implemented using the A* algorithm.
-# The solution is implemented in the MarsPlanner class.
-from search_algorithms import (
-    breadth_first_search,
-    depth_first_search,
-    depth_limited_search,
-)
-
+from antennae import test_antennae
+from mars_planner import *
+from routefinder import test_route_finder
+import antennae
 
 if __name__ == "__main__":
-
+    test_mars_planner()
+    print("-----------------------------")
+    test_route_finder()
+    print("-----------------------------")
+    test_antennae()
     pass

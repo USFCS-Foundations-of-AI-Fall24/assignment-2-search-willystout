@@ -116,7 +116,10 @@ def check_goal(state):
     return state.is_goal()
 
 
-if __name__ == "__main__":
+def test_route_finder():
     graph = read_mars_graph("marsmap")
-    mapstate = map_state("8,8", graph, None, 0, 0)
-    a_start_search = a_star(mapstate, sld, check_goal, True)
+    new_map_state = map_state("8,8", graph, None, 0, 0)
+    print("A_STAR SEARCH WITH SLD")
+    a_star_search = a_star(new_map_state, sld, check_goal, True)
+    print("A_STAR SEARCH WITH H1")
+    a_star_search_two = a_star(new_map_state, h1, check_goal, True)
